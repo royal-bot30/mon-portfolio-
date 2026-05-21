@@ -1,102 +1,909 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio - Sanders</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sanders — Développeur Web</title>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f0f5;
+      --muted: #8888aa;
+      --accent1: #ff4d6d;
+      --accent2: #7b2fff;
+      --accent3: #00d4ff;
+      --gold: #ffd166;
+      --grad1: linear-gradient(135deg, #ff4d6d, #7b2fff);
+      --grad2: linear-gradient(135deg, #7b2fff, #00d4ff);
+      --grad3: linear-gradient(135deg, #00d4ff, #ffd166);
+    }
 
-<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-font-family: Arial, sans-serif;
-margin:0;
-background:#f4f4f4;
-text-align:center;
-}
+    html { scroll-behavior: smooth; }
 
-header{
-background:#111;
-color:white;
-padding:30px 20px;
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-.container{
-max-width:900px;
-margin:auto;
-padding:40px 20px;
-}
+    /* ─── CURSOR ─── */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--accent1);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transition: transform 0.15s ease, background 0.3s ease;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(255,77,109,0.5);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-.project{
-background:white;
-margin:25px 0;
-padding:25px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
 
-h2{
-margin-top:0;
-}
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(20px);
+      background: rgba(10,10,15,0.7);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem; font-weight: 800;
+      background: var(--grad1);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.03em;
+      transition: color 0.25s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--grad1);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
 
-button{
-background:#0a7cff;
-color:white;
-border:none;
-padding:14px 24px;
-font-size:16px;
-border-radius:6px;
-cursor:pointer;
-}
+    /* ─── HERO ─── */
+    #accueil {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center;
+      padding: 120px 40px 60px;
+      position: relative; overflow: hidden;
+    }
 
-button:hover{
-background:#065ec7;
-}
+    .hero-orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25;
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb1 { width: 500px; height: 500px; background: var(--accent2); top: -100px; left: -150px; animation-delay: 0s; }
+    .orb2 { width: 400px; height: 400px; background: var(--accent1); bottom: -80px; right: -100px; animation-delay: -3s; }
+    .orb3 { width: 300px; height: 300px; background: var(--accent3); top: 40%; left: 60%; animation-delay: -6s; }
 
-footer{
-margin-top:40px;
-padding:20px;
-font-size:14px;
-color:#555;
-}
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
 
-</style>
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(123,47,255,0.15);
+      border: 1px solid rgba(123,47,255,0.35);
+      border-radius: 100px;
+      padding: 8px 18px; font-size: 0.78rem;
+      font-weight: 500; color: #b39dff;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .badge-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #7b2fff;
+      box-shadow: 0 0 8px #7b2fff;
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.9s ease 0.1s both;
+    }
+    .gradient-text {
+      background: var(--grad1);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text2 {
+      background: var(--grad2);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted); max-width: 560px;
+      line-height: 1.75; margin-bottom: 48px;
+      animation: fadeUp 1s ease 0.2s both;
+    }
+
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 1s ease 0.35s both;
+    }
+    .btn-primary {
+      padding: 14px 32px; border-radius: 100px;
+      background: var(--grad1);
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: 0.95rem;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: transform 0.25s, box-shadow 0.25s;
+      box-shadow: 0 0 30px rgba(255,77,109,0.3);
+      letter-spacing: 0.02em;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(255,77,109,0.45);
+    }
+    .btn-secondary {
+      padding: 13px 32px; border-radius: 100px;
+      background: transparent;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-weight: 500; font-size: 0.95rem;
+      border: 1px solid var(--border); cursor: pointer;
+      text-decoration: none; transition: border-color 0.25s, transform 0.25s;
+      letter-spacing: 0.02em;
+    }
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-3px);
+    }
+
+    .scroll-indicator {
+      position: absolute; bottom: 36px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      animation: fadeUp 1s ease 0.6s both;
+    }
+    .scroll-indicator span {
+      font-size: 0.72rem; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+      animation: scrollLine 2s ease infinite;
+    }
+    @keyframes scrollLine { 0%{opacity:0;transform:scaleY(0);transform-origin:top;} 50%{opacity:1;transform:scaleY(1);} 100%{opacity:0;transform:scaleY(0);transform-origin:bottom;} }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+
+    /* ─── SECTIONS COMMUNES ─── */
+    section { position: relative; z-index: 1; }
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent1); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::before {
+      content: ''; width: 30px; height: 2px;
+      background: var(--grad1); border-radius: 2px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800; letter-spacing: -1px;
+      line-height: 1.15; margin-bottom: 20px;
+    }
+
+    /* ─── À PROPOS ─── */
+    #apropos { background: var(--surface); }
+    .apropos-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: center;
+    }
+    .apropos-left { position: relative; }
+    .apropos-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px; padding: 40px;
+      position: relative; overflow: hidden;
+    }
+    .apropos-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad1);
+    }
+    .apropos-initials {
+      width: 90px; height: 90px; border-radius: 20px;
+      background: var(--grad1);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem; font-weight: 800; color: #fff;
+      margin-bottom: 24px;
+      box-shadow: 0 16px 40px rgba(255,77,109,0.3);
+    }
+    .apropos-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem; font-weight: 800; margin-bottom: 6px;
+    }
+    .apropos-role {
+      color: var(--muted); font-size: 0.9rem; margin-bottom: 24px;
+    }
+    .apropos-stats {
+      display: flex; gap: 24px; margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif; font-size: 1.6rem;
+      font-weight: 800; display: block;
+      background: var(--grad1);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-lbl { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+
+    .apropos-right p {
+      color: var(--muted); margin-bottom: 18px; font-size: 1.05rem; line-height: 1.8;
+    }
+    .apropos-right p strong { color: var(--text); }
+
+    .skills-grid {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px;
+    }
+    .skill-tag {
+      padding: 7px 16px; border-radius: 100px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem; font-weight: 500;
+      color: var(--muted);
+      transition: all 0.25s;
+    }
+    .skill-tag:hover {
+      border-color: var(--accent1);
+      color: var(--text);
+      background: rgba(255,77,109,0.08);
+    }
+
+    /* ─── PROJETS ─── */
+    #projets { background: var(--bg); }
+    .projets-note {
+      background: linear-gradient(135deg, rgba(123,47,255,0.1), rgba(0,212,255,0.1));
+      border: 1px solid rgba(123,47,255,0.25);
+      border-radius: 16px; padding: 20px 28px;
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 56px;
+    }
+    .projets-note-icon {
+      font-size: 1.6rem; flex-shrink: 0;
+    }
+    .projets-note p {
+      color: var(--muted); font-size: 0.95rem; line-height: 1.7;
+    }
+    .projets-note p strong { color: var(--text); }
+
+    .projets-list { display: flex; flex-direction: column; gap: 24px; }
+
+    .projet-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 32px;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+    .projet-card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: 4px 0 0 4px;
+    }
+    .projet-card:nth-child(1)::before { background: var(--grad1); }
+    .projet-card:nth-child(2)::before { background: var(--grad2); }
+    .projet-card:nth-child(3)::before { background: var(--grad3); }
+    .projet-card:nth-child(4)::before { background: linear-gradient(135deg,#ffd166,#ff4d6d); }
+    .projet-card:nth-child(5)::before { background: linear-gradient(135deg,#00d4ff,#7b2fff); }
+    .projet-card:nth-child(6)::before { background: linear-gradient(135deg,#ff4d6d,#ffd166); }
+
+    .projet-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .projet-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+      display: block;
+    }
+    .projet-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem; font-weight: 700;
+      margin-bottom: 10px; color: var(--text);
+    }
+    .projet-desc {
+      color: var(--muted); font-size: 0.92rem; line-height: 1.7;
+      max-width: 600px;
+    }
+    /* ── PLACEHOLDER pour description ── */
+    .projet-desc em {
+      color: rgba(136,136,170,0.45);
+      font-style: normal;
+    }
+
+    .btn-voir {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 26px; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; font-weight: 600;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+      flex-shrink: 0;
+    }
+    .btn-voir svg {
+      transition: transform 0.25s;
+    }
+    .btn-voir:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      background: #111;
+    }
+    .btn-voir:hover svg { transform: translate(3px,-3px); }
+
+    /* ─── TÉMOIGNAGES ─── */
+    #temoignages { background: var(--surface); }
+    .temoignages-intro {
+      color: var(--muted); font-size: 1.05rem;
+      max-width: 500px; line-height: 1.8; margin-bottom: 56px;
+    }
+    .temoignages-list {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .temoignage-frame {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .temoignage-frame:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.15);
+    }
+    .temoignage-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .temoignage-num {
+      font-family: 'Syne', sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .quote-mark {
+      font-size: 1.8rem; line-height: 1;
+      background: var(--grad1);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: Georgia, serif;
+    }
+    .temoignage-img-zone {
+      width: 100%;
+      min-height: 200px;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(255,255,255,0.015) 0px,
+          rgba(255,255,255,0.015) 1px,
+          transparent 1px,
+          transparent 12px
+        ),
+        var(--card);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .temoignage-img-zone img {
+      width: 100%; height: auto;
+      display: block;
+      object-fit: contain;
+    }
+    .temoignage-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 40px;
+      text-align: center;
+    }
+    .placeholder-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: rgba(123,47,255,0.12);
+      border: 1.5px dashed rgba(123,47,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .placeholder-text {
+      font-size: 0.82rem; color: rgba(136,136,170,0.5);
+      font-weight: 500;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 60px 40px 40px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800;
+      background: var(--grad1);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 14px;
+    }
+    .footer-text {
+      color: var(--muted); font-size: 0.9rem; margin-bottom: 32px;
+    }
+    .footer-divider {
+      height: 1px; background: var(--border); margin: 28px 0;
+    }
+    .footer-copy {
+      color: rgba(136,136,170,0.4); font-size: 0.8rem;
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      .nav-links { gap: 20px; }
+      .section-inner { padding: 70px 24px; }
+      .apropos-grid { grid-template-columns: 1fr; gap: 40px; }
+      .projet-card { grid-template-columns: 1fr; gap: 20px; }
+      .btn-voir { width: fit-content; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-title { font-size: 2.8rem; }
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>Portfolio Web</h1>
-<p>Voici ce que j'ai réalisé pour mes différents Clients. </p>
-</header>
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-<div class="container">
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo">Sanders.</div>
+  <ul class="nav-links">
+    <li><a href="#accueil">Accueil</a></li>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#temoignages">Témoignages</a></li>
+  </ul>
+</nav>
 
-<div class="project">
-<h2>Client 1 : Royal Clean Pressing</h2>
-<p>Site vitrine pour un service de pressing avec présentation des services.</p>
+<!-- ─── HERO ─── -->
+<section id="accueil">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
 
-<a href="https://royal-bot30.github.io/Royal-clean-pressing/" target="_blank">
-<button>Voir le site</button>
-</a>
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Disponible pour de nouveaux projets
+  </div>
 
-</div>
+  <h1 class="hero-title">
+    Bienvenue sur<br>
+    <span class="gradient-text">mon univers</span><br>
+    <span class="gradient-text2">créatif</span>
+  </h1>
 
-<div class="project">
-<h2>Client 2 : Manu Pressing</h2>
-<p>Site vitrine de pressing avec présentation simple et accès rapide aux informations.</p>
+  <p class="hero-sub">
+    Ici, chaque pixel a un sens. Chaque ligne de code, un but.
+    Découvrez des projets pensés pour convertir, impressionner et durer.
+  </p>
 
-<a href="https://royal-bot30.github.io/Manu-Pressing/" target="_blank">
-<button>Voir le site</button>
-</a>
+  <div class="hero-cta">
+    <a href="#projets" class="btn-primary">Voir mes projets</a>
+    <a href="#temoignages" class="btn-secondary">Témoignages clients</a>
+  </div>
 
-</div>
+  <div class="scroll-indicator">
+    <span>Défiler</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
-</div>
+<!-- ─── À PROPOS ─── -->
+<section id="apropos">
+  <div class="section-inner">
+    <div class="apropos-grid">
 
+      <div class="apropos-left reveal">
+        <div class="apropos-card">
+          <div class="apropos-initials">S</div>
+          <div class="apropos-name">Sanders</div>
+          <div class="apropos-role">Développeur Web · Togo 🇹🇬</div>
+          <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;">
+            Passionné par le web, je crée des expériences digitales qui font la différence pour les entreprises locales.
+          </p>
+          <div class="apropos-stats">
+            <div class="stat">
+              <span class="stat-num">6+</span>
+              <span class="stat-lbl">Projets réels</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">100%</span>
+              <span class="stat-lbl">Clients satisfaits</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">🇹🇬</span>
+              <span class="stat-lbl">Made in Togo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="apropos-right reveal">
+        <div class="section-label">À propos de moi</div>
+        <h2 class="section-title">
+          La passion<br>
+          <span class="gradient-text">qui construit le web</span>
+        </h2>
+        <p>
+          Tout a commencé par une <strong>passion profonde pour le web</strong> — cette fascination pour ce que l'on peut créer avec du code, du design et une bonne idée. Cette passion m'a naturellement poussé à me former, à apprendre, à pratiquer.
+        </p>
+        <p>
+          Aujourd'hui, cette formation me permet d'être opérationnel sur <strong>4 types de sites</strong> que je maîtrise de bout en bout :
+        </p>
+
+        <div class="skills-grid">
+          <span class="skill-tag">🚀 Landing Pages</span>
+          <span class="skill-tag">🛍️ Pages Produit</span>
+          <span class="skill-tag">🏢 Sites Vitrine</span>
+          <span class="skill-tag">🛒 Sites E-commerce</span>
+          <span class="skill-tag">📱 Design Responsive</span>
+          <span class="skill-tag">⚡ Performance</span>
+          <span class="skill-tag">🎨 UI / UX</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROJETS ─── -->
+<section id="projets">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Mes réalisations</div>
+      <h2 class="section-title">
+        Projets <span class="gradient-text">clients</span>
+      </h2>
+    </div>
+
+    <div class="projets-note reveal">
+      <div class="projets-note-icon">🇹🇬</div>
+      <p>
+        <strong>Projets 100% réels.</strong> Toutes ces réalisations ont été effectuées pour de vraies entreprises locales togolaises. Pas de projets fictifs — uniquement du travail concret, livré à de vrais clients.
+      </p>
+    </div>
+
+    <div class="projets-list">
+
+      <!-- Projet 1 -->
+      <div class="projet-card reveal">
+        <div class="projet-info">
+          <span class="projet-num">Projet Client · 01</span>
+          <div class="projet-title"><!-- Nom du projet 1 --></div>
+          <p class="projet-desc"><em>[ Ajoutez ici une courte description du projet : secteur d'activité, type de site réalisé, objectif client... ]</em></p>
+        </div>
+        <a href="#LIEN_PROJET_1" class="btn-voir" target="_blank">
+          Voir le site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Projet 2 -->
+      <div class="projet-card reveal">
+        <div class="projet-info">
+          <span class="projet-num">Projet Client · 02</span>
+          <div class="projet-title"><!-- Nom du projet 2 --></div>
+          <p class="projet-desc"><em>[ Ajoutez ici une courte description du projet : secteur d'activité, type de site réalisé, objectif client... ]</em></p>
+        </div>
+        <a href="#LIEN_PROJET_2" class="btn-voir" target="_blank">
+          Voir le site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Projet 3 -->
+      <div class="projet-card reveal">
+        <div class="projet-info">
+          <span class="projet-num">Projet Client · 03</span>
+          <div class="projet-title"><!-- Nom du projet 3 --></div>
+          <p class="projet-desc"><em>[ Ajoutez ici une courte description du projet : secteur d'activité, type de site réalisé, objectif client... ]</em></p>
+        </div>
+        <a href="#LIEN_PROJET_3" class="btn-voir" target="_blank">
+          Voir le site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Projet 4 -->
+      <div class="projet-card reveal">
+        <div class="projet-info">
+          <span class="projet-num">Projet Client · 04</span>
+          <div class="projet-title"><!-- Nom du projet 4 --></div>
+          <p class="projet-desc"><em>[ Ajoutez ici une courte description du projet : secteur d'activité, type de site réalisé, objectif client... ]</em></p>
+        </div>
+        <a href="#LIEN_PROJET_4" class="btn-voir" target="_blank">
+          Voir le site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Projet 5 -->
+      <div class="projet-card reveal">
+        <div class="projet-info">
+          <span class="projet-num">Projet Client · 05</span>
+          <div class="projet-title"><!-- Nom du projet 5 --></div>
+          <p class="projet-desc"><em>[ Ajoutez ici une courte description du projet : secteur d'activité, type de site réalisé, objectif client... ]</em></p>
+        </div>
+        <a href="#LIEN_PROJET_5" class="btn-voir" target="_blank">
+          Voir le site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Projet 6 -->
+      <div class="projet-card reveal">
+        <div class="projet-info">
+          <span class="projet-num">Projet Client · 06</span>
+          <div class="projet-title"><!-- Nom du projet 6 --></div>
+          <p class="projet-desc"><em>[ Ajoutez ici une courte description du projet : secteur d'activité, type de site réalisé, objectif client... ]</em></p>
+        </div>
+        <a href="#LIEN_PROJET_6" class="btn-voir" target="_blank">
+          Voir le site
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── TÉMOIGNAGES ─── -->
+<section id="temoignages">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Témoignages</div>
+      <h2 class="section-title">
+        Ce que disent mes<br>
+        <span class="gradient-text2">clients</span>
+      </h2>
+    </div>
+    <p class="temoignages-intro reveal">
+      Voilà ce que disent mes clients de mon travail — des retours authentiques, capturés directement depuis leurs messages.
+    </p>
+
+    <div class="temoignages-list">
+
+      <!-- Témoignage 1 -->
+      <div class="temoignage-frame reveal">
+        <div class="temoignage-header">
+          <span class="temoignage-num">Témoignage · 01</span>
+          <span class="quote-mark">"</span>
+        </div>
+        <div class="temoignage-img-zone">
+          <!-- REMPLACEZ LE CONTENU CI-DESSOUS PAR : <img src="VOTRE_IMAGE_1.jpg" alt="Témoignage client 1" /> -->
+          <div class="temoignage-placeholder">
+            <div class="placeholder-icon">📸</div>
+            <p class="placeholder-text">Insérez ici la capture d'écran du témoignage 1<br><code style="font-size:0.75rem;opacity:0.6;">&lt;img src="temoignage1.jpg" alt="Témoignage 1" /&gt;</code></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Témoignage 2 -->
+      <div class="temoignage-frame reveal">
+        <div class="temoignage-header">
+          <span class="temoignage-num">Témoignage · 02</span>
+          <span class="quote-mark">"</span>
+        </div>
+        <div class="temoignage-img-zone">
+          <div class="temoignage-placeholder">
+            <div class="placeholder-icon">📸</div>
+            <p class="placeholder-text">Insérez ici la capture d'écran du témoignage 2<br><code style="font-size:0.75rem;opacity:0.6;">&lt;img src="temoignage2.jpg" alt="Témoignage 2" /&gt;</code></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Témoignage 3 -->
+      <div class="temoignage-frame reveal">
+        <div class="temoignage-header">
+          <span class="temoignage-num">Témoignage · 03</span>
+          <span class="quote-mark">"</span>
+        </div>
+        <div class="temoignage-img-zone">
+          <div class="temoignage-placeholder">
+            <div class="placeholder-icon">📸</div>
+            <p class="placeholder-text">Insérez ici la capture d'écran du témoignage 3<br><code style="font-size:0.75rem;opacity:0.6;">&lt;img src="temoignage3.jpg" alt="Témoignage 3" /&gt;</code></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Témoignage 4 -->
+      <div class="temoignage-frame reveal">
+        <div class="temoignage-header">
+          <span class="temoignage-num">Témoignage · 04</span>
+          <span class="quote-mark">"</span>
+        </div>
+        <div class="temoignage-img-zone">
+          <div class="temoignage-placeholder">
+            <div class="placeholder-icon">📸</div>
+            <p class="placeholder-text">Insérez ici la capture d'écran du témoignage 4<br><code style="font-size:0.75rem;opacity:0.6;">&lt;img src="temoignage4.jpg" alt="Témoignage 4" /&gt;</code></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Témoignage 5 -->
+      <div class="temoignage-frame reveal">
+        <div class="temoignage-header">
+          <span class="temoignage-num">Témoignage · 05</span>
+          <span class="quote-mark">"</span>
+        </div>
+        <div class="temoignage-img-zone">
+          <div class="temoignage-placeholder">
+            <div class="placeholder-icon">📸</div>
+            <p class="placeholder-text">Insérez ici la capture d'écran du témoignage 5<br><code style="font-size:0.75rem;opacity:0.6;">&lt;img src="temoignage5.jpg" alt="Témoignage 5" /&gt;</code></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Témoignage 6 -->
+      <div class="temoignage-frame reveal">
+        <div class="temoignage-header">
+          <span class="temoignage-num">Témoignage · 06</span>
+          <span class="quote-mark">"</span>
+        </div>
+        <div class="temoignage-img-zone">
+          <div class="temoignage-placeholder">
+            <div class="placeholder-icon">📸</div>
+            <p class="placeholder-text">Insérez ici la capture d'écran du témoignage 6<br><code style="font-size:0.75rem;opacity:0.6;">&lt;img src="temoignage6.jpg" alt="Témoignage 6" /&gt;</code></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
 <footer>
-Portfolio de démonstration – 2026
+  <div class="footer-logo">Sanders.</div>
+  <p class="footer-text">Développeur Web · Lomé, Togo 🇹🇬</p>
+  <div class="footer-divider"></div>
+  <p class="footer-copy">© 2025 Sanders — Tous droits réservés.</p>
 </footer>
 
-</body>
+<script>
+  // ── Curseur personnalisé ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top  = my - 6 + 'px';
+  });
+  (function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top  = ry - 18 + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      ring.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+    });
+  });
 
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Nav active link ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--text)' : '';
+    });
+  });
+</script>
+</body>
 </html>
